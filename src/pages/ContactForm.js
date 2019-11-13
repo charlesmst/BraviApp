@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Form, Modal } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import { addContact, deleteContact, updateContact } from '../actions';
+import { addContact, deleteContact, updateContact, openContactForm } from '../actions';
 import LoadingInput from '../components/LoadingInput';
 import { useStateValue } from '../components/StateProvider';
 import { ContactType } from '../enums';
@@ -34,6 +34,8 @@ function ContactForm({ history, match, personId, backUrl }) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contacts, contactId, isEditing, state.data, history, state.loading])
+    React.useEffect(() => openContactForm(dispatch), [dispatch])
+
     const redirectToList = () => history.push(backUrl)
     const onSubmit = async (e) => {
         e.preventDefault()
@@ -93,7 +95,7 @@ function ContactForm({ history, match, personId, backUrl }) {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    {isEditing && <Button variant="danger" onClick={() => showDelete()}>Delete</Button>}
+                    {isEditing && <Button variant="danger" className={"mr-auto"} onClick={() => showDelete()}>Delete</Button>}
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
                     <Button variant="primary" type={"submit"}>Save</Button>
                 </Modal.Footer>

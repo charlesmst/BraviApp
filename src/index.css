@@ -5,9 +5,33 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #e9e9e9;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+.app-container{
+  margin:0 auto;
+  max-width: 800px;
+  padding: 0 10px;
+}
+.card-list{
+  margin-top:5px;
+}
+
+.card-list-clickable{
+  transition: background-color .5s ease-out;
+}
+.card-list-clickable:hover{
+  cursor:pointer;
+  background-color: #e9e9e9;
+}
+.card-add{
+  color:#6c757d;
+}
+.link-contact{
+  color:#6c757d!important;
+}
+

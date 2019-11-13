@@ -34,6 +34,7 @@ export async function updatePerson(dispatch, id, data) {
     try {
         await axios.put('/person/' + id, data)
         dispatch({ type: 'SAVE_PERSON_SUCCESS_UPDATE', person: { ...data, id } })
+        return id
     } catch (e) {
         dispatch({ type: 'SAVE_PERSON_ERROR', error: filterApiErrorMessage(e) })
     }
@@ -90,4 +91,12 @@ export async function deleteContact(dispatch, personId, id) {
         dispatch({ type: 'SAVE_CONTACT_ERROR', error: filterApiErrorMessage(e) })
     }
 
+}
+
+export function openContactForm(dispatch) {
+    dispatch({ type: 'OPEN_CONTACT_FORM' })
+}
+
+export function openPersonForm(dispatch) {
+    dispatch({ type: 'OPEN_PERSON_FORM' })
 }

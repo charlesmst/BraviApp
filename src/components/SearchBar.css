@@ -1,0 +1,34 @@
+
+.SearchBar-header {
+    background-color: #007bff;
+    position: fixed;
+    width:100%;
+    top:0;
+    left:0;
+    right:0;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white!important;
+    height:60px;
+  }
+  
+
+.SearchBar-header-search .btn-link{
+    color:white!important;
+  }
+  
+  .SearchBar-header-search-bar{
+    display: none;
+    visibility: hidden;
+    position: absolute;
+    top:0;
+    width:100%;
+  }
+  .SearchBar-header-container{
+position: relative;
+  }
+  .SearchBar-header-search-bar.SearchBar-header-active{
+    display: block;
+    margin-top:10px;
+    visibility: visible;
+  }

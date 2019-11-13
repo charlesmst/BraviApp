@@ -1,7 +1,7 @@
 
 import Axios, { filterApiErrorMessage } from './Axios'
 jest.mock('./Axios')
-import { loadPeople, addPerson, updatePerson, deletePerson, addContact, updateContact, deleteContact } from "./actions";
+import { loadPeople, addPerson, updatePerson, deletePerson, addContact, updateContact, deleteContact, openPersonForm, openContactForm } from "./actions";
 const fakePeopleData = [
     {
         id: "id1",
@@ -137,4 +137,17 @@ it('should delete contact to api', async (done) => {
     expect(dispatch).toHaveBeenNthCalledWith(2, { type: 'SAVE_CONTACT_SUCCESS_DELETE', personId, contactId: id })
     expect(dispatch).toHaveBeenCalledTimes(2)
     done()
+})
+
+it('should call Open form for person', () => {
+    const dispatch = jest.fn()
+    openPersonForm(dispatch)
+    expect(dispatch).toHaveBeenCalledWith({ type: 'OPEN_PERSON_FORM' })
+
+})
+
+it('should call Open form for contact', () => {
+    const dispatch = jest.fn()
+    openContactForm(dispatch)
+    expect(dispatch).toHaveBeenCalledWith({ type: 'OPEN_CONTACT_FORM' })
 })

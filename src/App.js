@@ -8,19 +8,17 @@ import PersonList from './pages/PersonList';
 function App() {
   return (
     <StateProvider reducer={reducer} initialState={{ loading: true }}>
-      <div>
-        <Router>
-          <Switch>
-            <Route path="/">
-              <PersonList />
+      <Router>
+        <Switch>
+          <Route path="/">
+            <PersonList />
 
-            </Route>
-            <Route path="*">
-              <Page404 />
-            </Route>
-          </Switch>
-        </Router>
-      </div>
+          </Route>
+          <Route path="*">
+            <Page404 />
+          </Route>
+        </Switch>
+      </Router>
     </StateProvider>
   );
 }

@@ -9,7 +9,7 @@ export default function EmptyCard({ message, add }) {
             <Alert.Heading>Nothing here yet!</Alert.Heading>
             <p>{message}</p>
             <hr />
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-start">
                 <Button onClick={add} variant="outline-info">
                     Add
                 </Button>

@@ -2,8 +2,8 @@ import React from 'react'
 
 export default function NewItemCard({ title, onClick }) {
     return (
-        <div class="card" onClick={onClick}>
-            <div class="card-body">
+        <div className="card card-list card-list-clickable" onClick={onClick}>
+            <div className="card-body card-add">
                 <center>
                     <i className={"fa fa-plus"} /> {title}
                 </center>

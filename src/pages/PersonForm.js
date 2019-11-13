@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal } from "react-bootstrap";
 import { withRouter, Route } from "react-router-dom";
-import { addPerson, updatePerson, deletePerson } from '../actions';
+import { addPerson, updatePerson, deletePerson, openPersonForm } from '../actions';
 import { useStateValue } from '../components/StateProvider';
 import ErrorCardSimple from '../components/ErrorCardSimple';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -37,6 +37,7 @@ function PersonForm({ history, match }) {
             }
         }
     }, [state.data, personId, history, isEditing, state.loading])
+    React.useEffect(() => openPersonForm(dispatch), [dispatch])
     const redirectToList = () => history.push("/")
     const onSubmit = async (e) => {
         e.preventDefault()
@@ -45,9 +46,12 @@ function PersonForm({ history, match }) {
         if (!isEditing) {
             const id = await addPerson(dispatch, { name })
             if (id)
-                history.replace("/edit/" + id)
+                history.push("/")
         } else {
-            await updatePerson(dispatch, personId, { name })
+            const id = await updatePerson(dispatch, personId, { name })
+            if (id) {
+                history.push("/")
+            }
         }
     }
     const confirmSaveAddContact = async () => {
@@ -110,17 +114,24 @@ function PersonForm({ history, match }) {
                     </ConfirmAction>
                 </Modal.Body>
 
-                <Modal.Footer>
-                    {isEditing && <Button variant="danger" onClick={showDelete}>Delete</Button>}
+                <Modal.Footer >
+                    {isEditing && <Button variant="danger" className={"mr-auto"} onClick={showDelete}>Delete</Button>}
+
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
                     <Button variant="primary" type={"submit"} disabled={state.loadingSave}>Save</Button>
+
+
 
                 </Modal.Footer>
             </form>
 
         </Modal>
-        <Route path={match.url + "/contact/add"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
-        <Route path={match.url + "/contact/edit/:id"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
+        <Route path={match.url + "/contact/add"}  >
+            <ContactForm backUrl={match.url} personId={personId} />
+        </Route>
+        <Route path={match.url + "/contact/edit/:id"}  >
+            <ContactForm backUrl={match.url} personId={personId} />
+        </Route>
 
     </React.Fragment>)
 }

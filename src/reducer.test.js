@@ -110,3 +110,18 @@ it('should remove contact from person  when delete  is succeess', () => {
 })
 
 
+it('should reset error on open person form', () => {
+    const currentState = { errorSave: "Some error" }
+    const result = reducer(currentState, { type: 'OPEN_PERSON_FORM' })
+    expect(result.errorSave).toBeFalsy()
+})
+
+
+
+it('should reset error on open contact form', () => {
+    const currentState = { errorSaveContact: "Some error" }
+    const result = reducer(currentState, { type: 'OPEN_CONTACT_FORM' })
+    expect(result.errorSaveContact).toBeFalsy()
+})
+
+

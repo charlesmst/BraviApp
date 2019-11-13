@@ -1,40 +1,56 @@
 import _ from 'lodash';
-import React from 'react';
-import { Link, withRouter, Route } from "react-router-dom";
+import React, { useState } from 'react';
+import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Route, withRouter } from "react-router-dom";
+import { loadPeople } from '../actions';
 import EmptyCard from '../components/EmptyCard';
 import ErrorCard from '../components/ErrorCard';
 import LoadingCard from '../components/LoadingCard';
-import { loadPeople } from '../actions';
+import NewItemCard from '../components/NewItemCard';
 import PersonCard from '../components/PersonCard';
 import { useStateValue } from '../components/StateProvider';
 import PersonForm from './PersonForm';
+import SearchBar from '../components/SearchBar';
 
 function PersonList({ history }) {
 
     const [state, dispatch] = useStateValue();
+    const [search, setSearch] = useState("")
+    const [searching, setSearching] = useState(false)
     React.useEffect(() => {
         loadPeople(dispatch)
     }, [dispatch])
+
+    React.useEffect(() => {
+        setSearch("")
+        setSearching(false)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.data ? state.data.length : 0])
+
     const redirectToAdd = () => history.push("/add")
+    const filterPerson = x => !search || (x.name.toUpperCase() + _.get(x, "contacts", []).map(x => x.value.toUpperCase()).join(" ")).indexOf(search.toUpperCase()) !== -1
+    const filteredData = _.get(state, "data", []).filter(filterPerson)
+    const filterMessage = filteredData.length === 0 && search ? `No person found for '${search}'` : 'No person was registered here'
 
     return (<React.Fragment>
-        <center><h1>Contact List</h1></center>
-        <form>
-            <div className="form-group">
-                <input type="text" className="form-control" placeholder="Type to search" />
-            </div>
-        </form>
-        <LoadingCard loading={state.loading} />
-        {state.error && <ErrorCard message={state.error} tryAgain={() => loadPeople(dispatch)}></ErrorCard>}
-        {!state.error && !state.loading && _.get(state, "data", []).length === 0 && <EmptyCard message={"No person was registered here"} add={redirectToAdd} />}
-        {_.get(state, "data", []).map(x => <PersonCard key={x.id} person={x} onClick={() => history.push(`/edit/${x.id}`)} />)}
+        <SearchBar search={search} setSearch={setSearch} searching={searching} setSearching={setSearching} />
+        <div className={"app-container margin-header"}>
 
-        <Link to={"/add"}>Add Person</Link>
-        <Route path={"/add"} component={PersonForm} />
-        <Route path={"/edit/:id"} component={PersonForm} />
-        <pre>
-            {JSON.stringify(state, null, 4)}
-        </pre>
-    </React.Fragment>)
+            <LoadingCard loading={state.loading} />
+            {state.error && <ErrorCard message={state.error} tryAgain={() => loadPeople(dispatch)}></ErrorCard>}
+            {!state.error && !state.loading && filteredData.length === 0 && <EmptyCard message={filterMessage} add={redirectToAdd} />}
+            {filteredData.map(x => <PersonCard key={x.id} person={x} onClick={() => history.push(`/edit/${x.id}`)} />)}
+
+            <NewItemCard onClick={redirectToAdd} title={"Add Person"} />
+
+            <Route path={"/add"} >
+                <PersonForm />
+            </Route>
+            <Route path={"/edit/:id"}>
+                <PersonForm />
+            </Route>
+        </div>
+
+    </React.Fragment >)
 }
 export default withRouter(PersonList)
