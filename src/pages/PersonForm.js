@@ -51,7 +51,7 @@ function PersonForm({ history, match }) {
         }
     }
     const confirmSaveAddContact = async () => {
-
+        hideConfirmSave()
         const id = await addPerson(dispatch, { name })
         if (id)
             history.replace("/edit/" + id + "/contact/add")
@@ -83,8 +83,7 @@ function PersonForm({ history, match }) {
                         <ErrorCardSimple message={state.errorSave} tryAgain={onSubmit} />
                     </div>
                     <LoadingOverlay loading={state.loadingSave} />
-                    <Route path={match.url + "/contact/add"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
-                    <Route path={match.url + "/contact/edit/:id"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
+                    <Route path={match.url + "/contact/add"} render={props => <div>Adding</div>} />
 
                     <ContactList
                         contacts={contacts}
@@ -114,12 +113,15 @@ function PersonForm({ history, match }) {
                 <Modal.Footer>
                     {isEditing && <Button variant="danger" onClick={showDelete}>Delete</Button>}
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
-                    <Button variant="primary" type={"submit"}>Save</Button>
+                    <Button variant="primary" type={"submit"} disabled={state.loadingSave}>Save</Button>
 
                 </Modal.Footer>
             </form>
 
         </Modal>
+        <Route path={match.url + "/contact/add"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
+        <Route path={match.url + "/contact/edit/:id"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
+
     </React.Fragment>)
 }
 export default withRouter(PersonForm)
