@@ -1,16 +1,10 @@
-import React, { useReducer } from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import PersonList from './pages/PersonList'
-import Page404 from './pages/Page404'
-import { StateProvider } from './components/StateProvider';
 import { reducer } from './components/PeopleState';
+import { StateProvider } from './components/StateProvider';
+import Page404 from './pages/Page404';
+import PersonList from './pages/PersonList';
 function App() {
   return (
     <StateProvider reducer={reducer} initialState={{loading:true}}>

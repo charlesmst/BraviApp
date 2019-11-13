@@ -18,7 +18,7 @@ it('should start loading when fetch starts', () => {
 })
 
 it('should reset error when loading starts', () => {
-    const currentState = { loading: false, data: [] }
+    const currentState = { loading: false, data: [],error:"Error" }
     const result = reducer(currentState, { type: 'FETCH_PEOPLE_START' })
     expect(result.error).toBeFalsy()
 })
