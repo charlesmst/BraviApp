@@ -1,11 +1,14 @@
+import _ from 'lodash'
 import React from 'react'
-import { ContactType } from '../enums'
+import { ContactTypeDescription } from '../enums'
 
 export default function ContactCard({ contact: { type, value }, onClick }) {
+    const typeDescription = ContactTypeDescription[type]
+
     return (
         <div className="card card-list card-list-clickable" onClick={onClick}>
             <div className="card-body">
-                <h6 className="card-subtitle mb-2 text-muted">{ContactType[type] || "Unknown"}</h6>
+                <h6 className="card-subtitle mb-2 text-muted"> <i className={_.get(typeDescription, "icon", "fa fa-question")}></i> {_.get(typeDescription, "description", "Unknown")}</h6>
                 <h6 className="card-subtitle mb-2 text-muted">{value}</h6>
 
             </div>

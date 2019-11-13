@@ -8,20 +8,24 @@ const ContactTypeDescription = [
         description: "Phone",
         icon: "fa fa-phone",
         href: (value) => "tel:" + value,
-        hrefMessage: "Click to call"
+        hrefMessage: "Click to call",
+        inputType: "tel"
     },
     {
         description: "E-mail",
         icon: "fa fa-envelope",
         href: (value) => "mailto:" + value,
-        hrefMessage: "Click to send an e-mail"
+        hrefMessage: "Click to send an e-mail",
+        inputType: "email"
 
     },
     {
         description: "WhatsApp",
         icon: "fa fa-whatsapp",
         href: (value) => "tel:" + value,
-        hrefMessage: "Click to call"
+        hrefMessage: "Click to call",
+        inputType: "tel"
+
 
     },
 ]

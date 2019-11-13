@@ -1,6 +1,7 @@
 let config
-if (window.location.host === "localhost:3000") {
-    // if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' ) {
+// if (window.location.host === "localhost:3000") {
+// if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     config = {
         apiUrl: 'https://localhost:5001/api/'
     }

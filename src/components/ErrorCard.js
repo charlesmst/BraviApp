@@ -11,7 +11,7 @@ export default function ErrorCard({ message, tryAgain }) {
             <hr />
             <div className="d-flex justify-content-end">
                 <Button onClick={tryAgain} variant="outline-danger">
-                    Try Again
+                    Retry
                 </Button>
             </div>
         </Alert>

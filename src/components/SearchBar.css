@@ -1,6 +1,6 @@
 
 .SearchBar-header {
-    background-color: #007bff;
+    background-color:  #3c3c3c;
     position: fixed;
     width:100%;
     top:0;
@@ -10,25 +10,41 @@
     font-size: calc(10px + 2vmin);
     color: white!important;
     height:60px;
-  }
+}
   
 
 .SearchBar-header-search .btn-link{
     color:white!important;
-  }
+    
+}
+.SearchBar-header-search > button{
+    float: right;
+    margin-top: 12px;
+}
   
-  .SearchBar-header-search-bar{
+.SearchBar-header-search-bar{
     display: none;
     visibility: hidden;
     position: absolute;
-    top:0;
-    width:100%;
-  }
-  .SearchBar-header-container{
-position: relative;
-  }
-  .SearchBar-header-search-bar.SearchBar-header-active{
+    top: 0;
+    left: 10px; 
+    width: calc(100% - 20px);
+}
+.SearchBar-header-container{
+    position: relative;
+}
+.SearchBar-header-search-bar.SearchBar-header-active{
     display: block;
     margin-top:10px;
     visibility: visible;
-  }
+}
+
+.card-list-clickable:nth-child(odd) {
+    background: #f8f8f8;
+}
+.card-list-clickable:nth-child(odd):hover {
+    background: #e2e2e2;
+}
+.SearchBar-brn-cancel-filter{
+    cursor:pointer;
+}

@@ -2,18 +2,19 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Form, Modal } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import { addContact, deleteContact, updateContact, openContactForm } from '../actions';
-import LoadingInput from '../components/LoadingInput';
-import { useStateValue } from '../components/StateProvider';
-import { ContactType } from '../enums';
-import ErrorCardSimple from '../components/ErrorCardSimple';
+import { addContact, deleteContact, openContactForm, updateContact } from '../actions';
 import ConfirmDelete from '../components/ConfirmDelete';
+import ErrorCardSimple from '../components/ErrorCardSimple';
+import { useStateValue } from '../components/StateProvider';
+import { ContactTypeDescription } from '../enums';
 function ContactForm({ history, match, personId, backUrl }) {
     const contactId = match.params.id
     const isEditing = !!contactId
     const [state, dispatch] = useStateValue();
     const [value, setValue] = useState("")
     const [type, setType] = useState(0)
+    const inputRef = React.useRef()
+
     const [deleteVisible, setDeleteVisible] = useState(false)
     const showDelete = () => setDeleteVisible(true)
     const hideDelete = () => setDeleteVisible(false)
@@ -34,11 +35,18 @@ function ContactForm({ history, match, personId, backUrl }) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contacts, contactId, isEditing, state.data, history, state.loading])
-    React.useEffect(() => openContactForm(dispatch), [dispatch])
+    React.useEffect(() => {
+        openContactForm(dispatch)
+        if (inputRef.current && match.isExact) {
+            inputRef.current.focus()
+        }
+    }, [dispatch, match.isExact])
 
     const redirectToList = () => history.push(backUrl)
     const onSubmit = async (e) => {
         e.preventDefault()
+        if (state.loadingSaveContact)
+            return
         if (!isEditing) {
             const id = await addContact(dispatch, personId, { type, value })
             if (id)
@@ -55,6 +63,8 @@ function ContactForm({ history, match, personId, backUrl }) {
         if (id)
             history.replace(backUrl)
     }
+    const fieldType = typeof ContactTypeDescription[type] !== "undefined" ? ContactTypeDescription[type].inputType : "text"
+    const fieldDescription = typeof ContactTypeDescription[type] !== "undefined" ? ContactTypeDescription[type].description : "text"
     return (<React.Fragment>
         <Modal show onHide={redirectToList} key={"modal"}>
             <form onSubmit={onSubmit}>
@@ -65,24 +75,25 @@ function ContactForm({ history, match, personId, backUrl }) {
 
                 <Modal.Body>
 
-                    <form>
-                        <Form.Group controlId="exampleForm.ControlSelect2">
-                            <Form.Control as="select" value={type} onChange={e => setType(e.target.value)}>
-                                {ContactType.map((x, i) => <option value={i}>{x}</option>)}
-                            </Form.Control>
-                        </Form.Group>
-                        <div className="form-group">
-                            <LoadingInput type="text" className="form-control"
-                                required
-                                placeholder="Name"
-                                value={value}
-                                onChange={e => setValue(e.target.value)}
-                            />
 
-                        </div>
-                        <ErrorCardSimple message={state.errorSaveContact} tryAgain={onSubmit} />
+                    <Form.Group controlId="exampleForm.ControlSelect2">
+                        <Form.Control as="select" value={type} onChange={e => setType(e.target.value)}>
+                            {ContactTypeDescription.map((x, i) => <option value={i}>{x.description}</option>)}
+                        </Form.Control>
+                    </Form.Group>
+                    <div className="form-group">
+                        <input type={fieldType} className="form-control"
+                            required
+                            placeholder={fieldDescription}
+                            value={value}
+                            ref={inputRef}
+                            onChange={e => setValue(e.target.value)}
+                        />
 
-                    </form>
+                    </div>
+                    <ErrorCardSimple message={state.errorSaveContact} tryAgain={onSubmit} />
+
+
 
                     <ConfirmDelete
                         onConfirm={onDelete}
@@ -97,7 +108,7 @@ function ContactForm({ history, match, personId, backUrl }) {
                 <Modal.Footer>
                     {isEditing && <Button variant="danger" className={"mr-auto"} onClick={() => showDelete()}>Delete</Button>}
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
-                    <Button variant="primary" type={"submit"}>Save</Button>
+                    <Button variant="info" type={"submit"} disabled={state.loadingSaveContact}>Save</Button>
                 </Modal.Footer>
             </form>
 

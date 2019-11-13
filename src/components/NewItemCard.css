@@ -1,0 +1,15 @@
+.NewItemCard-card{
+    background-color:green!important;
+    color:white!important;
+}
+.NewItemCard-card > .card-body{
+    
+    padding: 10px 0!important;
+}
+.NewItemCard-card:hover{
+    background-color:#016301;
+}
+.NewItemCard-card .card-add{
+    color:white!important;
+    text-transform: uppercase;
+}

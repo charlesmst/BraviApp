@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Route, withRouter } from "react-router-dom";
 import { loadPeople } from '../actions';
 import EmptyCard from '../components/EmptyCard';
@@ -8,9 +7,9 @@ import ErrorCard from '../components/ErrorCard';
 import LoadingCard from '../components/LoadingCard';
 import NewItemCard from '../components/NewItemCard';
 import PersonCard from '../components/PersonCard';
+import SearchBar from '../components/SearchBar';
 import { useStateValue } from '../components/StateProvider';
 import PersonForm from './PersonForm';
-import SearchBar from '../components/SearchBar';
 
 function PersonList({ history }) {
 

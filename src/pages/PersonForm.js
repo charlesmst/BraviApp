@@ -1,21 +1,21 @@
+import _ from 'lodash';
 import React, { useState } from 'react';
 import { Button, Modal } from "react-bootstrap";
-import { withRouter, Route } from "react-router-dom";
-import { addPerson, updatePerson, deletePerson, openPersonForm } from '../actions';
-import { useStateValue } from '../components/StateProvider';
+import { Route, withRouter } from "react-router-dom";
+import { addPerson, deletePerson, openPersonForm, updatePerson } from '../actions';
+import ConfirmAction from '../components/ConfirmAction';
+import ConfirmDelete from '../components/ConfirmDelete';
+import ContactList from '../components/ContactList';
 import ErrorCardSimple from '../components/ErrorCardSimple';
 import LoadingOverlay from '../components/LoadingOverlay';
-import LoadingInput from '../components/LoadingInput';
-import ContactList from '../components/ContactList';
-import _ from 'lodash'
+import { useStateValue } from '../components/StateProvider';
 import ContactForm from './ContactForm';
-import ConfirmDelete from '../components/ConfirmDelete';
-import ConfirmAction from '../components/ConfirmAction';
 function PersonForm({ history, match }) {
     const personId = match.params.id
     const isEditing = !!personId
-    const [state, dispatch] = useStateValue();
+    const [state, dispatch] = useStateValue()
     const [name, setName] = useState("")
+    const inputRef = React.useRef()
     const [deleteVisible, setDeleteVisible] = useState(false)
     const showDelete = () => setDeleteVisible(true)
     const hideDelete = () => setDeleteVisible(false)
@@ -30,17 +30,25 @@ function PersonForm({ history, match }) {
         if (isEditing && state.data && history) {
             const people = state.data.filter(x => x.id === personId)
             if (people[0]) {
-                console.log({ people })
                 setName(people[0].name)
             } else {
                 history.replace("/")
             }
         }
     }, [state.data, personId, history, isEditing, state.loading])
-    React.useEffect(() => openPersonForm(dispatch), [dispatch])
+    React.useEffect(() => {
+        openPersonForm(dispatch)
+
+        setTimeout(() => {
+            if (inputRef.current && match.isExact)
+                inputRef.current.focus()
+        }, 100)
+    }, [dispatch, match.isExact])
     const redirectToList = () => history.push("/")
     const onSubmit = async (e) => {
         e.preventDefault()
+        if (state.loadingSave)
+            return
         if (!name)
             return
         if (!isEditing) {
@@ -55,6 +63,8 @@ function PersonForm({ history, match }) {
         }
     }
     const confirmSaveAddContact = async () => {
+        if (state.loadingSave)
+            return
         hideConfirmSave()
         const id = await addPerson(dispatch, { name })
         if (id)
@@ -78,15 +88,16 @@ function PersonForm({ history, match }) {
 
                 <Modal.Body>
                     <div className="form-group">
-                        <LoadingInput type="text" className="form-control"
+                        <input type="text" className="form-control"
                             required
                             placeholder="Name"
                             value={name}
+                            ref={inputRef}
                             onChange={e => setName(e.target.value)}
                         />
-                        <ErrorCardSimple message={state.errorSave} tryAgain={onSubmit} />
                     </div>
-                    <LoadingOverlay loading={state.loadingSave} />
+                    <ErrorCardSimple message={state.errorSave} tryAgain={onSubmit} />
+
                     <Route path={match.url + "/contact/add"} render={props => <div>Adding</div>} />
 
                     <ContactList
@@ -107,7 +118,7 @@ function PersonForm({ history, match }) {
                     <ConfirmAction
                         onConfirm={confirmSaveAddContact}
                         visible={confirmSave}
-                        body="To add contact you should first save the person?"
+                        body="To add contacts you should first save the person?"
                         confirmText="Save person"
                         onClose={hideConfirmSave}
                         title="Saving Person">
@@ -118,7 +129,7 @@ function PersonForm({ history, match }) {
                     {isEditing && <Button variant="danger" className={"mr-auto"} onClick={showDelete}>Delete</Button>}
 
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
-                    <Button variant="primary" type={"submit"} disabled={state.loadingSave}>Save</Button>
+                    <Button variant="info" type={"submit"} disabled={state.loadingSave}>Save</Button>
 
 
 

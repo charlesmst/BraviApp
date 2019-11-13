@@ -13,7 +13,7 @@ export default function ConfirmAction({ visible, title, body, confirmText, onCon
         <Modal.Footer>
 
             <Button variant="secondary" onClick={onClose}>Cancel</Button>
-            <Button variant="primary" onClick={onConfirm}>{confirmText}</Button>
+            <Button variant="info" onClick={onConfirm}>{confirmText}</Button>
         </Modal.Footer>
 
 

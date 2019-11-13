@@ -7,11 +7,12 @@ export default function ErrorCardSimple({ message, tryAgain }) {
     return (
         <Alert variant={"danger"}>
             <p>{message}</p>
+            <div className="d-flex justify-content-end">
 
-            <Button onClick={tryAgain} variant="outline-danger">
-                Try Again
+                <Button onClick={tryAgain} variant="outline-danger" >
+                    Retry
             </Button>
-
+            </div>
         </Alert>
 
     )
