@@ -9,11 +9,20 @@ import LoadingInput from '../components/LoadingInput';
 import ContactList from '../components/ContactList';
 import _ from 'lodash'
 import ContactForm from './ContactForm';
+import ConfirmDelete from '../components/ConfirmDelete';
+import ConfirmAction from '../components/ConfirmAction';
 function PersonForm({ history, match }) {
     const personId = match.params.id
     const isEditing = !!personId
     const [state, dispatch] = useStateValue();
     const [name, setName] = useState("")
+    const [deleteVisible, setDeleteVisible] = useState(false)
+    const showDelete = () => setDeleteVisible(true)
+    const hideDelete = () => setDeleteVisible(false)
+    const [confirmSave, setConfirmVisible] = useState(false)
+    const showConfirmSave = () => setConfirmVisible(true)
+    const hideConfirmSave = () => setConfirmVisible(false)
+
     const contacts = state.data && personId ? _.get(_.first(state.data.filter(x => x.id === personId)), "contacts", []) : []
     React.useEffect(() => {
         if (state.loading)
@@ -41,6 +50,21 @@ function PersonForm({ history, match }) {
             await updatePerson(dispatch, personId, { name })
         }
     }
+    const confirmSaveAddContact = async () => {
+
+        const id = await addPerson(dispatch, { name })
+        if (id)
+            history.replace("/edit/" + id + "/contact/add")
+
+    }
+    const onDelete = () => deletePerson(dispatch, personId)
+    const onAddContact = () => {
+        if (isEditing) {
+            history.push(match.url + "/contact/add")
+        } else {
+            showConfirmSave()
+        }
+    }
     return (<React.Fragment>
         <Modal show onHide={redirectToList} key={"modal"}>
             <form onSubmit={onSubmit}>
@@ -64,14 +88,31 @@ function PersonForm({ history, match }) {
 
                     <ContactList
                         contacts={contacts}
-                        onAdd={() => history.push(match.url + "/contact/add")}
+                        onAdd={onAddContact}
                         onEdit={(id) => {
                             history.push(match.url + "/contact/edit/" + id)
                         }} />
+                    <ConfirmDelete
+                        onConfirm={onDelete}
+                        visible={deleteVisible}
+                        body="Are you sure you want to delete this?"
+                        confirmText="Confirm Delete"
+                        onClose={hideDelete}
+                        title="Deleting Person">
+                    </ConfirmDelete>
+
+                    <ConfirmAction
+                        onConfirm={confirmSaveAddContact}
+                        visible={confirmSave}
+                        body="To add contact you should first save the person?"
+                        confirmText="Save person"
+                        onClose={hideConfirmSave}
+                        title="Saving Person">
+                    </ConfirmAction>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    {isEditing && <Button variant="danger" onClick={() => deletePerson(dispatch, personId)}>Delete</Button>}
+                    {isEditing && <Button variant="danger" onClick={showDelete}>Delete</Button>}
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
                     <Button variant="primary" type={"submit"}>Save</Button>
 

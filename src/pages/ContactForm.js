@@ -7,12 +7,16 @@ import LoadingInput from '../components/LoadingInput';
 import { useStateValue } from '../components/StateProvider';
 import { ContactType } from '../enums';
 import ErrorCardSimple from '../components/ErrorCardSimple';
+import ConfirmDelete from '../components/ConfirmDelete';
 function ContactForm({ history, match, personId, backUrl }) {
     const contactId = match.params.id
     const isEditing = !!contactId
     const [state, dispatch] = useStateValue();
     const [value, setValue] = useState("")
     const [type, setType] = useState(0)
+    const [deleteVisible, setDeleteVisible] = useState(false)
+    const showDelete = () => setDeleteVisible(true)
+    const hideDelete = () => setDeleteVisible(false)
     const contacts = state.data && personId ? _.get(_.first(state.data.filter(x => x.id === personId)), "contacts", []) : []
     React.useEffect(() => {
         if (state.loading)
@@ -20,13 +24,15 @@ function ContactForm({ history, match, personId, backUrl }) {
         if (isEditing && contacts && history) {
             const contact = contacts.filter(x => x.id === contactId)
             if (contact[0]) {
-
-                setValue(contact[0].value)
-                setType(contact[0].type)
+                if (!value) {
+                    setValue(contact[0].value)
+                    setType(contact[0].type)
+                }
             } else {
                 history.replace("/")
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contacts, contactId, isEditing, state.data, history, state.loading])
     const redirectToList = () => history.push(backUrl)
     const onSubmit = async (e) => {
@@ -75,10 +81,19 @@ function ContactForm({ history, match, personId, backUrl }) {
                         <ErrorCardSimple message={state.errorSaveContact} tryAgain={onSubmit} />
 
                     </form>
+
+                    <ConfirmDelete
+                        onConfirm={onDelete}
+                        visible={deleteVisible}
+                        body="Are you sure you want to delete this?"
+                        confirmText="Confirm Delete"
+                        onClose={hideDelete}
+                        title="Deleting Contact">
+                    </ConfirmDelete>
                 </Modal.Body>
 
                 <Modal.Footer>
-                    {isEditing && <Button variant="danger" onClick={() => onDelete()}>Delete</Button>}
+                    {isEditing && <Button variant="danger" onClick={() => showDelete()}>Delete</Button>}
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
                     <Button variant="primary" type={"submit"}>Save</Button>
                 </Modal.Footer>
