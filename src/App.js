@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {
@@ -9,21 +9,25 @@ import {
 } from "react-router-dom";
 import PersonList from './pages/PersonList'
 import Page404 from './pages/Page404'
+import { StateProvider } from './components/StateProvider';
+import { reducer } from './components/PeopleState';
 function App() {
   return (
-    <div>
-      <Router>
-        <Switch>
+    <StateProvider reducer={reducer} initialState={{loading:true}}>
+      <div>
+        <Router>
+          <Switch>
             <Route path="/">
-            
               <PersonList />
+
             </Route>
             <Route path="*">
               <Page404 />
             </Route>
-        </Switch>
-      </Router>
-    </div>
+          </Switch>
+        </Router>
+      </div>
+    </StateProvider>
   );
 }
 

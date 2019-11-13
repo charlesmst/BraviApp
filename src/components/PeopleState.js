@@ -1,5 +1,7 @@
 
 import axios, { filterApiErrorMessage } from "../Axios";
+
+
 export function reducer(state, action) {
     switch (action.type) {
         case 'FETCH_PEOPLE_START':
@@ -13,9 +15,9 @@ export function reducer(state, action) {
         case 'SAVE_PERSON_SUCCESS_ADD':
             return { ...state, loadingSave: false, data: [...state.data, action.person], errorSave: null }
         case 'SAVE_PERSON_SUCCESS_UPDATE':
-            return { ...state, loadingSave: false, data: state.data.map(x => x.id == action.person.id ? { ...x, ...action.person } : x), errorSave: null }
+            return { ...state, loadingSave: false, data: state.data.map(x => x.id === action.person.id ? { ...x, ...action.person } : x), errorSave: null }
         case 'SAVE_PERSON_SUCCESS_DELETE':
-            return { ...state, loadingSave: false, data: state.data.filter(x => x.id != action.id), errorSave: null }
+            return { ...state, loadingSave: false, data: state.data.filter(x => x.id !== action.id), errorSave: null }
 
 
 
@@ -46,6 +48,8 @@ export function reducer(state, action) {
     }
     return state
 }
+
+
 export async function loadPeople(dispatch) {
     dispatch({ type: 'FETCH_PEOPLE_START' })
     try {

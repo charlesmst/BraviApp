@@ -1,10 +1,11 @@
 import React from 'react'
-import * as PeopleState from '../components/PeopleState'
+import { useStateValue } from '../components/StateProvider';
+import { loadPeople, addPerson } from '../components/PeopleState';
 export default function PersonList() {
-    const [state, dispatch] = React.useReducer(PeopleState.reducer, {  });
-    React.useEffect(()=>{
-        PeopleState.loadPeople(dispatch)
-    },[])
+    const [state, dispatch] = useStateValue();
+    React.useEffect(() => {
+        loadPeople(dispatch)
+    }, [])
     return (<React.Fragment>
         <center><h1>Contact List</h1></center>
         <form>
@@ -13,8 +14,9 @@ export default function PersonList() {
             </div>
         </form>
         <pre>
-            {JSON.stringify(state,null,4)}
+            {JSON.stringify(state, null, 4)}
         </pre>
+        <button onClick={()=>addPerson(dispatch,{name:"Charles 2"})}> Add Person</button>
 
     </React.Fragment>)
 }
