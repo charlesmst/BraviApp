@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import { Button, Modal } from "react-bootstrap";
-import { withRouter } from "react-router-dom";
-import { addPerson, updatePerson, deletePerson } from '../components/PeopleState';
+import { withRouter, Route } from "react-router-dom";
+import { addPerson, updatePerson, deletePerson } from '../actions';
 import { useStateValue } from '../components/StateProvider';
 import ErrorCardSimple from '../components/ErrorCardSimple';
 import LoadingOverlay from '../components/LoadingOverlay';
 import LoadingInput from '../components/LoadingInput';
+import ContactList from '../components/ContactList';
+import _ from 'lodash'
+import ContactForm from './ContactForm';
 function PersonForm({ history, match }) {
     const personId = match.params.id
     const isEditing = !!personId
     const [state, dispatch] = useStateValue();
     const [name, setName] = useState("")
+    const contacts = state.data && personId ? _.get(_.first(state.data.filter(x => x.id === personId)), "contacts", []) : []
     React.useEffect(() => {
-        console.log({ isEditing })
+        if (state.loading)
+            return
         if (isEditing && state.data && history) {
             const people = state.data.filter(x => x.id === personId)
             if (people[0]) {
@@ -22,9 +27,10 @@ function PersonForm({ history, match }) {
                 history.replace("/")
             }
         }
-    }, [state.data, personId, history, isEditing])
+    }, [state.data, personId, history, isEditing, state.loading])
     const redirectToList = () => history.push("/")
-    const tryToSave = async () => {
+    const onSubmit = async (e) => {
+        e.preventDefault()
         if (!name)
             return
         if (!isEditing) {
@@ -37,29 +43,41 @@ function PersonForm({ history, match }) {
     }
     return (<React.Fragment>
         <Modal show onHide={redirectToList} key={"modal"}>
-            <Modal.Header closeButton>
-                <Modal.Title>{isEditing?"Edit":"New"} Person</Modal.Title>
-            </Modal.Header>
+            <form onSubmit={onSubmit}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{isEditing ? "Edit" : "New"} Person</Modal.Title>
+                </Modal.Header>
 
-            <Modal.Body>
-                <form>
+                <Modal.Body>
                     <div className="form-group">
                         <LoadingInput type="text" className="form-control"
                             required
                             placeholder="Name"
                             value={name}
                             onChange={e => setName(e.target.value)}
-                            onBlur={tryToSave} />
-                        <ErrorCardSimple message={state.errorSave} tryAgain={tryToSave} />
+                        />
+                        <ErrorCardSimple message={state.errorSave} tryAgain={onSubmit} />
                     </div>
                     <LoadingOverlay loading={state.loadingSave} />
-                </form>
-            </Modal.Body>
+                    <Route path={match.url + "/contact/add"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
+                    <Route path={match.url + "/contact/edit/:id"} render={props => <ContactForm backUrl={match.url} personId={personId} {...props} />} />
 
-            <Modal.Footer>
-                <Button variant="secondary" onClick={redirectToList}>Close</Button>
-                {isEditing&& <Button variant="danger" onClick={()=>deletePerson(dispatch,personId)}>Delete</Button>}
-            </Modal.Footer>
+                    <ContactList
+                        contacts={contacts}
+                        onAdd={() => history.push(match.url + "/contact/add")}
+                        onEdit={(id) => {
+                            history.push(match.url + "/contact/edit/" + id)
+                        }} />
+                </Modal.Body>
+
+                <Modal.Footer>
+                    {isEditing && <Button variant="danger" onClick={() => deletePerson(dispatch, personId)}>Delete</Button>}
+                    <Button variant="secondary" onClick={redirectToList}>Close</Button>
+                    <Button variant="primary" type={"submit"}>Save</Button>
+
+                </Modal.Footer>
+            </form>
+
         </Modal>
     </React.Fragment>)
 }

@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
-import { reducer } from './components/PeopleState';
+import { reducer } from './reducer';
 import { StateProvider } from './components/StateProvider';
 import Page404 from './pages/Page404';
 import PersonList from './pages/PersonList';
 function App() {
   return (
-    <StateProvider reducer={reducer} initialState={{loading:true}}>
+    <StateProvider reducer={reducer} initialState={{ loading: true }}>
       <div>
         <Router>
           <Switch>
