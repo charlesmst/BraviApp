@@ -1,0 +1,13 @@
+.react-phone-number-input__icon-image{
+    vertical-align: top;
+}
+.ContactForm-input-tel input{
+    border-bottom: 0;
+}
+.ContactForm-input-tel{
+    padding-top: 3px;
+}
+.ContactForm-input-tel .react-phone-number-input__icon--international svg{
+    vertical-align: top;
+
+}

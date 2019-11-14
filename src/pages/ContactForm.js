@@ -7,6 +7,10 @@ import ConfirmDelete from '../components/ConfirmDelete';
 import ErrorCardSimple from '../components/ErrorCardSimple';
 import { useStateValue } from '../components/StateProvider';
 import { ContactTypeDescription } from '../enums';
+import PhoneInput from 'react-phone-number-input'
+import SmartInput from 'react-phone-number-input/smart-input'
+import './ContactForm.css'
+import 'react-phone-number-input/style.css'
 function ContactForm({ history, match, personId, backUrl }) {
     const contactId = match.params.id
     const isEditing = !!contactId
@@ -81,17 +85,31 @@ function ContactForm({ history, match, personId, backUrl }) {
                             {ContactTypeDescription.map((x, i) => <option value={i}>{x.description}</option>)}
                         </Form.Control>
                     </Form.Group>
-                    <div className="form-group">
-                        <input type={fieldType} className="form-control"
-                            required
-                            placeholder={fieldDescription}
-                            value={value}
-                            ref={inputRef}
-                            onChange={e => setValue(e.target.value)}
-                        />
+                    {fieldType === "tel" ? <PhoneInput
+                        type={fieldType}
+                        required
+                        country="BR"
+                        inputComponent={SmartInput }
+                        placeholder={fieldDescription}
+                        value={value}
+                        className={"form-control ContactForm-input-tel"}
+                        ref={inputRef}
+                        onChange={e => setValue(e)}
+                    /> :
+                        <div className="form-group">
 
-                    </div>
-                    <ErrorCardSimple message={state.errorSaveContact} tryAgain={onSubmit} />
+                            <input type={fieldType} className="form-control"
+                                required
+                                placeholder={fieldDescription}
+                                value={value}
+                                ref={inputRef}
+                                onChange={e => setValue(e.target.value)}
+                            />
+
+
+                        </div>
+                    }
+                    < ErrorCardSimple message={state.errorSaveContact} tryAgain={onSubmit} />
 
 
 

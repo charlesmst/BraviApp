@@ -4,9 +4,11 @@ import _ from 'lodash'
 function ContactItem({ type, value }) {
     const typeDescription = ContactTypeDescription[type]
     const href = typeDescription.href(value)
+    const format = typeDescription.format || (v => v)
+
     return (<h6 className="card-subtitle mb-2 text-muted">
         <a href={href} className={"link-contact"} onClick={e => e.stopPropagation()} title={_.get(typeDescription, "hrefMessage", "")}>
-            <i className={_.get(typeDescription, "icon", "fa fa-question")}></i> {value}
+            <i className={_.get(typeDescription, "icon", "fa fa-question")}></i> {format(value)}
         </a>
     </h6>)
 }

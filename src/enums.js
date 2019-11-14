@@ -1,3 +1,5 @@
+import { formatPhoneNumber } from 'react-phone-number-input'
+
 const ContactType = [
     "Phone",
     "Email",
@@ -9,14 +11,16 @@ const ContactTypeDescription = [
         icon: "fa fa-phone",
         href: (value) => "tel:" + value,
         hrefMessage: "Click to call",
-        inputType: "tel"
+        inputType: "tel",
+        format: value => value && formatPhoneNumber(value)
     },
     {
         description: "E-mail",
         icon: "fa fa-envelope",
         href: (value) => "mailto:" + value,
         hrefMessage: "Click to send an e-mail",
-        inputType: "email"
+        inputType: "email",
+        format:value=>value
 
     },
     {
@@ -24,7 +28,9 @@ const ContactTypeDescription = [
         icon: "fa fa-whatsapp",
         href: (value) => "tel:" + value,
         hrefMessage: "Click to call",
-        inputType: "tel"
+        inputType: "tel",
+        format: value => value && formatPhoneNumber(value)
+
 
 
     },
