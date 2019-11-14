@@ -82,7 +82,7 @@ function ContactForm({ history, match, personId, backUrl }) {
 
                     <Form.Group controlId="exampleForm.ControlSelect2">
                         <Form.Control as="select" value={type} onChange={e => setType(e.target.value)}>
-                            {ContactTypeDescription.map((x, i) => <option value={i}>{x.description}</option>)}
+                            {ContactTypeDescription.map((x, i) => <option value={i} key={i}>{x.description}</option>)}
                         </Form.Control>
                     </Form.Group>
                     {fieldType === "tel" ? <PhoneInput
