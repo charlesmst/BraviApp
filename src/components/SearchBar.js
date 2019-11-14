@@ -7,7 +7,8 @@ export default function SearchBar({ searching, setSearching, search, setSearch }
     const startSearching = () => {
         setSearching(true)
         setTimeout(() => {
-            inputRef.current.focus()
+            if (inputRef.current)
+                inputRef.current.focus()
 
         }, 100)
     }

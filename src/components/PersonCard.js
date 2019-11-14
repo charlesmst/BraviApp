@@ -13,11 +13,11 @@ function ContactItem({ type, value }) {
 export default function PersonCard({ person: { name, contacts }, onClick }) {
 
     return (
-        <div className="card card-list card-list-clickable" onClick={onClick}>
+        <div className="card card-list card-list-clickable card-person" onClick={onClick}>
             <div className="card-body">
                 <h5 className="card-title">{name}</h5>
-                {(contacts || []).map(contact => (
-                    <ContactItem {...contact} />
+                {(contacts || []).map((contact,i) => (
+                    <ContactItem {...contact} key={i} />
                 ))}
 
                 {_.isEmpty(contacts) && <h6 className="card-subtitle mb-2 text-muted">No contacts</h6>}

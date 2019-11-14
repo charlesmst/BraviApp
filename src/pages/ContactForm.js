@@ -108,7 +108,7 @@ function ContactForm({ history, match, personId, backUrl }) {
                 <Modal.Footer>
                     {isEditing && <Button variant="danger" className={"mr-auto"} onClick={() => showDelete()}>Delete</Button>}
                     <Button variant="secondary" onClick={redirectToList}>Close</Button>
-                    <Button variant="info" type={"submit"} disabled={state.loadingSaveContact}>Save</Button>
+                    <Button variant="info" id={"savePersonButton"} type={"submit"} title={"Save Contact"} disabled={state.loadingSaveContact}>Save</Button>
                 </Modal.Footer>
             </form>
 

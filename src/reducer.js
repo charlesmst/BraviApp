@@ -1,19 +1,20 @@
 import _ from 'lodash'
 
 export function reducer(state, action) {
+    const sortOperation = [person => _.get(person, "name", "").toLowerCase()]
     switch (action.type) {
         case 'FETCH_PEOPLE_START':
             return { ...state, loading: true, error: null }
         case 'FETCH_PEOPLE_SUCCESS':
-            return { ...state, loading: false, data: _.orderBy(action.data, "name"), error: null }
+            return { ...state, loading: false, data: _.orderBy(action.data, sortOperation, ['asc']), error: null }
         case 'FETCH_PEOPLE_ERROR':
             return { ...state, loading: false, data: [], error: action.error }
         case 'SAVE_PERSON_START':
             return { ...state, loadingSave: true, errorSave: null }
         case 'SAVE_PERSON_SUCCESS_ADD':
-            return { ...state, loadingSave: false, data: _.orderBy([...state.data, action.person], "name"), errorSave: null }
+            return { ...state, loadingSave: false, data: _.orderBy([...state.data, action.person], sortOperation, ['asc']), errorSave: null }
         case 'SAVE_PERSON_SUCCESS_UPDATE':
-            return { ...state, loadingSave: false, data: _.orderBy(state.data.map(x => x.id === action.person.id ? { ...x, ...action.person } : x), "name"), errorSave: null }
+            return { ...state, loadingSave: false, data: _.orderBy(state.data.map(x => x.id === action.person.id ? { ...x, ...action.person } : x), sortOperation, ['asc']), errorSave: null }
         case 'SAVE_PERSON_SUCCESS_DELETE':
             return { ...state, loadingSave: false, data: state.data.filter(x => x.id !== action.id), errorSave: null }
         case 'SAVE_PERSON_ERROR':

@@ -7,7 +7,6 @@ import ConfirmAction from '../components/ConfirmAction';
 import ConfirmDelete from '../components/ConfirmDelete';
 import ContactList from '../components/ContactList';
 import ErrorCardSimple from '../components/ErrorCardSimple';
-import LoadingOverlay from '../components/LoadingOverlay';
 import { useStateValue } from '../components/StateProvider';
 import ContactForm from './ContactForm';
 function PersonForm({ history, match }) {
