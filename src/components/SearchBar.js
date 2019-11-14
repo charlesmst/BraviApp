@@ -45,7 +45,7 @@ export default function SearchBar({ searching, setSearching, search, setSearch }
             </div>
             <div className={"app-container SearchBar-header-search"}>
                 Contact List
-                        <Button title={"Click to search"} variant="link" onClick={startSearching}><i className={"fa fa-search"}></i></Button>
+                        <Button title={"Click to search"} className={"SearchBar-search-button"} variant="link" onClick={startSearching}><i className={"fa fa-search"}></i></Button>
             </div>
 
         </h1>

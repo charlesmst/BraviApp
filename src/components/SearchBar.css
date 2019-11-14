@@ -10,6 +10,7 @@
     font-size: calc(10px + 2vmin);
     color: white!important;
     height:60px;
+    z-index: 100;
 }
   
 
@@ -47,4 +48,10 @@
 }
 .SearchBar-brn-cancel-filter{
     cursor:pointer;
+}
+.SearchBar-search-button i{
+    font-size: 25px;
+}
+.SearchBar-search-button{
+    padding-top: 2px;
 }
